@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # flutter_application_1
 
 A new Flutter project.
@@ -14,3 +15,7 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# Tugas_Progmob
+Membuat landing page, login page, register page, dan home page untuk aplikasi Re-Use
+>>>>>>> f69729e39fa483702c840858502a2b2687ab17f5
