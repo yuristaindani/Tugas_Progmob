@@ -1,15 +1,22 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_application_1/Pages/homePage.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_application_1/components/myTextFields.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'loginPage.dart';
+import 'package:get_storage/get_storage.dart';
 
 class RegisterPage extends StatelessWidget {
   RegisterPage({super.key});
+
+  final _dio = Dio();
+  final _storage = GetStorage();
+  final _apiUrl = 'https://mobileapis.manpits.xyz/api';
+
 
   //text editing controllers
   final fullnameController = TextEditingController();
@@ -186,8 +193,7 @@ class RegisterPage extends StatelessWidget {
                   child: 
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context, 
-                            MaterialPageRoute(builder: (context) => HomePage()),);
+                      goRegister(context);
                     },
                     style: ElevatedButton.styleFrom(
                       shape:RoundedRectangleBorder(
@@ -222,8 +228,7 @@ class RegisterPage extends StatelessWidget {
                         width: 3,),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, 
-                            MaterialPageRoute(builder: (context) => LoginPage()),);
+                          Navigator.pushNamed(context, '/login' );
                         },
                         child: 
                         Text('Login',
@@ -243,4 +248,22 @@ class RegisterPage extends StatelessWidget {
         backgroundColor: Colors.white,   
      );
     }
+  
+void goRegister(BuildContext context) async {
+  try {
+    final _response = await _dio.post(
+      '${_apiUrl}/register',
+      data: {
+        'name': usernameController.text,
+        'email': emailController.text,
+        'password': passwordController.text,
+      }
+    );
+    print(_response.data);
+    _storage.write('token', _response.data ['data']['token']);
+    Navigator.pushNamed(context, '/login');
+    } on DioException catch (e) {
+      print ('${e.response} - ${e.response?.statusCode}');
+    }
+  } 
 }
