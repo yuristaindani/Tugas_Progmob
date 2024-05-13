@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
               title: Text('List Volunteer'),
               onTap: () {
                 Navigator.pop(context); // Tutup drawer
-                Navigator.pushNamed(context, '/listVolunteer');
+                Navigator.pushNamed(context, '/daftarVolunteer');
               },
             ),
           ],

@@ -1,119 +1,86 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_application_1/Pages/listVolunteer.dart';
 import 'package:get_storage/get_storage.dart';
 
-// Define the Volunteer class at the top-level
-class Volunteer {
-  final int id;
-  final String nomorInduk;
-  final String nama;
-  final String alamat;
-  final String tanggalLahir;
-  final String telepon;
-  final int statusAktif; // Define statusAktif property
-
-  Volunteer({
-    required this.id,
-    required this.nomorInduk,
-    required this.nama,
-    required this.alamat,
-    required this.tanggalLahir,
-    required this.telepon,
-    required this.statusAktif,
-  });
-
-  factory Volunteer.fromJson(Map<String, dynamic> json) {
-    return Volunteer(
-      id: json['id'] ?? 0,
-      nomorInduk: json['nomor_induk'].toString(),
-      nama: json['nama'] ?? '',
-      alamat: json['alamat'] ?? '',
-      tanggalLahir: json['tgl_lahir'] ?? '',
-      telepon: json['telepon'] ?? '',
-      statusAktif: json['status'] ?? 0,
-    );
-  }
-}
-
 class EditVolunteerPage extends StatefulWidget {
-  final Volunteer volunteer;
-
-  const EditVolunteerPage({Key? key, required this.volunteer}) : super(key: key);
+  const EditVolunteerPage({Key? key}) : super(key: key);
 
   @override
   _EditVolunteerPageState createState() => _EditVolunteerPageState();
 }
 
 class _EditVolunteerPageState extends State<EditVolunteerPage> {
-  late TextEditingController nomorIndukController;
-  late TextEditingController namaController;
-  late TextEditingController alamatController;
-  late TextEditingController teleponController;
-  late TextEditingController tanggalLahirController;
-  late int _selectedStatus; // Nilai default status aktif
+  final Dio _dio = Dio();
+  final GetStorage _storage = GetStorage();
+  final String _apiUrl = 'https://mobileapis.manpits.xyz/api';
 
-  final _dio = Dio();
-  final _storage = GetStorage();
-  final _apiUrl = 'https://mobileapis.manpits.xyz/api';
+  Volunteer? volunteer;
+  bool isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    nomorIndukController = TextEditingController(text: widget.volunteer.nomorInduk.toString());
-    namaController = TextEditingController(text: widget.volunteer.nama);
-    alamatController = TextEditingController(text: widget.volunteer.alamat);
-    teleponController = TextEditingController(text: widget.volunteer.telepon);
-    tanggalLahirController = TextEditingController(text: widget.volunteer.tanggalLahir);
-    _selectedStatus = widget.volunteer.statusAktif;
-  }
+  final TextEditingController noIndukController = TextEditingController();
+  final TextEditingController namaController = TextEditingController();
+  final TextEditingController alamatController = TextEditingController();
+  final TextEditingController tglLahirController = TextEditingController();
+  final TextEditingController teleponController = TextEditingController();
 
   @override
-  void dispose() {
-    nomorIndukController.dispose();
-    namaController.dispose();
-    alamatController.dispose();
-    teleponController.dispose();
-    tanggalLahirController.dispose();
-    super.dispose();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args != null) {
+      int id = args as int;
+      fetchMemberDetails(id);
+    }
   }
 
-  Future<void> _updateVolunteer() async {
+  Future<void> fetchMemberDetails(int id) async {
+    setState(() {
+      isLoading = true;
+    });
+
     try {
-      final response = await _dio.put(
-        '$_apiUrl/anggota/${widget.volunteer.id}',
-        data: {
-          'nomor_induk': nomorIndukController.text,
-          'nama': namaController.text,
-          'alamat': alamatController.text,
-          'tgl_lahir': tanggalLahirController.text,
-          'telepon': teleponController.text,
-          'status_aktif': _selectedStatus,
-        },
+      final response = await _dio.get(
+        '$_apiUrl/anggota/$id',
         options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${_storage.read('token')}',
-          },
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
         ),
       );
 
       if (response.statusCode == 200) {
-        Navigator.pushNamed(context, '/homepage');
+        final responseData = response.data;
+        final volunteerData = responseData['data']['anggota'];
+        setState(() {
+          volunteer = Volunteer.fromJson(volunteerData);
+          if (volunteer != null) {
+            noIndukController.text = volunteer!.nomorInduk;
+            namaController.text = volunteer!.nama;
+            alamatController.text = volunteer!.alamat;
+            teleponController.text = volunteer!.telepon;
+            tglLahirController.text = volunteer!.tanggalLahir;
+          }
+        });
       } else {
-        // throw DioError(response: response);
+        print('Terjadi kesalahan: ${response.statusCode}');
       }
-    } catch (e) {
-      print('Update failed: $e');
+    } on DioError catch (e) {
+      isLoading = false;
+      print('${e.response} - ${e.response?.statusCode}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Update failed. Please check your data or login again.',
+            'Your token is expired. Login Please.',
             textAlign: TextAlign.center,
           ),
           duration: Duration(seconds: 3),
           behavior: SnackBarBehavior.floating,
         ),
       );
+      Navigator.pushReplacementNamed(context, '/login');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -121,54 +88,37 @@ class _EditVolunteerPageState extends State<EditVolunteerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Edit Volunteer',
-          style: TextStyle(fontSize: 20),
-        ),
+        title: Text('Edit Volunteer'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Update Volunteer',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            TextFormField(
+              controller: noIndukController,
+              decoration: InputDecoration(labelText: 'No Induk'),
             ),
-            SizedBox(height: 10),
-            Text(
-              'Expand the community reach by making the volunteers up to date',
-              style: TextStyle(fontSize: 14),
-              textAlign: TextAlign.center,
+            TextFormField(
+              controller: namaController,
+              decoration: InputDecoration(labelText: 'Nama Lengkap'),
             ),
-            SizedBox(height: 30),
-            _buildTextField('Nomor Induk', nomorIndukController),
+            TextFormField(
+              controller: alamatController,
+              decoration: InputDecoration(labelText: 'Alamat'),
+            ),
+            TextFormField(
+              controller: tglLahirController,
+              decoration: InputDecoration(labelText: 'Tanggal Lahir (YYYY-MM-DD)'),
+            ),
+            TextFormField(
+              controller: teleponController,
+              decoration: InputDecoration(labelText: 'Telepon'),
+            ),
             SizedBox(height: 20),
-            _buildTextField('Name', namaController),
-            SizedBox(height: 20),
-            _buildTextField('Alamat', alamatController),
-            SizedBox(height: 20),
-            _buildTextField('Tanggal Lahir', tanggalLahirController), // Updated label
-            SizedBox(height: 20),
-            _buildTextField('Telepon', teleponController),
-            SizedBox(height: 20),
-            _buildStatusRadio(),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Cancel'),
-                ),
-                SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: _updateVolunteer,
-                  child: Text('Update'),
-                ),
-              ],
+            ElevatedButton(
+              onPressed: isLoading ? null : () => editMemberDetails(context),
+              child: Text('Simpan'),
             ),
           ],
         ),
@@ -176,51 +126,52 @@ class _EditVolunteerPageState extends State<EditVolunteerPage> {
     );
   }
 
-  Widget _buildTextField(String labelText, TextEditingController controller) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: labelText,
-        filled: true,
-        fillColor: Colors.grey[200],
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+  Future<void> editMemberDetails(BuildContext context) async {
+  String noInduk = noIndukController.text.trim();
+  String nama = namaController.text.trim();
+  String alamat = alamatController.text.trim();
+  String tglLahir = tglLahirController.text.trim();
+  String telepon = teleponController.text.trim();
+
+  final response = await _dio.put(
+    '$_apiUrl/anggota/${volunteer?.id}',
+    data: {
+      'nomor_induk': noInduk,
+      'nama': nama,
+      'alamat': alamat,
+      'tgl_lahir': tglLahir,
+      'telepon': telepon,
+    },
+    options: Options(
+      headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+    ),
+  );
+
+  if (response.statusCode == 200) {
+    // Data berhasil diperbarui
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Data berhasil diperbarui.'),
+        duration: Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+    Navigator.pushReplacementNamed(context, '/daftarVolunteer');
+  } else {
+    // Terjadi kesalahan saat memperbarui data
+    print('Terjadi kesalahan: ${response.statusCode}');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Terjadi kesalahan saat memperbarui data. Silakan coba lagi.',
+          textAlign: TextAlign.center,
+        ),
+        duration: Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }
 
-  Widget _buildStatusRadio() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Status Aktif:',
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-        ),
-        Row(
-          children: [
-            Radio(
-              value: 1,
-              groupValue: _selectedStatus,
-              onChanged: (value) {
-                setState(() {
-                  _selectedStatus = value as int;
-                });
-              },
-            ),
-            Text('Aktif'),
-            Radio(
-              value: 0,
-              groupValue: _selectedStatus,
-              onChanged: (value) {
-                setState(() {
-                  _selectedStatus = value as int;
-                });
-              },
-            ),
-            Text('Non-Aktif'),
-          ],
-        ),
-      ],
-    );
-  }
+  Navigator.of(context).pop(); // Tutup dialog edit
+}
 }

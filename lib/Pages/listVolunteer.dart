@@ -57,7 +57,7 @@ class _VolunteerListPageState extends State<VolunteerListPage> {
                           icon: Icon(Icons.edit),
                           color: Colors.white,
                           onPressed: () {
-                            // Implementasi untuk mengedit volunteer
+                            Navigator.pushReplacementNamed(context, '/edit', arguments: volunteer?.id);
                           },
                         ),
                         IconButton(
