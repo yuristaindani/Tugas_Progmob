@@ -260,7 +260,7 @@ class LoginPage extends StatelessWidget {
       );
       print(_response.data);
       _storage.write('token', _response.data ['data']['token']);
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushNamed(context, '/homepage');
     } on DioException catch (e) {
       print ('${e.response} - ${e.response?.statusCode}');
     }

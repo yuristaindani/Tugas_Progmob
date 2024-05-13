@@ -1,116 +1,93 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_application_1/components/searchBar.dart';
-import 'package:dio/dio.dart';
-
 
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
-
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
-  final List<Map<String, String>> users = [
-    {'name': 'Rose Potter', 'email': 'rose@gmail.com'},
-    {'name': 'Harry Potter', 'email': 'harrypotter@gmail.com'},
-    {'name': 'Draco Malfoy', 'email': 'malfoydraco@gmail.com'},
-    {'name': 'Hermoine Granger', 'email': 'missgranger@gmail.com'},
-    {'name': 'Ron Weasly', 'email': 'ronweasly@gmail.com'},
-    {'name': 'Luna Lovegood', 'email': 'lovegood@gmail.com'},
-    {'name': 'Lily Potter', 'email': 'lilypotter@gmail.com'},
-    {'name': 'Albus Dumbledore', 'email': 'dumbledore@gmail.com'},
-  ];
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          title: Text('List Users',
+        backgroundColor: Colors.white,
+        title: Text(
+          'Home',
           style: GoogleFonts.urbanist(
-            fontSize: 30,
-            fontWeight: FontWeight.bold
-          ),),
+            fontSize: 24,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 28, 95, 30),
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.add),
+              title: Text('Add Volunteer'),
+              onTap: () {
+                Navigator.pop(context); // Tutup drawer
+                Navigator.pushNamed(context, '/add');
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.people),
+              title: Text('List Volunteer'),
+              onTap: () {
+                Navigator.pop(context); // Tutup drawer
+                Navigator.pushNamed(context, '/listVolunteer');
+              },
+            ),
+          ],
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(30.0),
           child: Center(
             child: Column(
               children: [
-
-                //Search Bar
+                // Search Bar
                 Container(
-                  width: 2000,
                   height: 50,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50)),
+                    borderRadius: BorderRadius.circular(50),
+                    border: Border.all(color: Colors.grey),
+                  ),
                   child: SearchThing(),
                 ),
-
-                SizedBox(
-                  height: 20,
-                ),
-
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: users.length,
-                  itemBuilder: (context, index) {
-                    final user = users[index];
-                    return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: Container(
-                        height: 90,
-                        width: 2000,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Color.fromARGB(255, 28, 95, 30)),
-                          color: Color.fromARGB(255, 28, 95, 30),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(user['name'] ?? '',
-                              style: GoogleFonts.urbanist(
-                                fontSize: 30,
-                                color: Colors.white
-                              ),),
-                              Text(user['email'] ?? '',
-                              style: GoogleFonts.urbanist(
-                                fontSize: 15,
-                                color: Colors.white
-                              ),),
-                          ],),
-                        ),
-                      )); 
-                    },
-                  ),
-                ],
-              ),
+                SizedBox(height: 20),
+                // More Widgets Here
+              ],
             ),
           ),
         ),
-
-      //tombol Navbar
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        showSelectedLabels: true, // Tampilkan label item yang dipilih
-        showUnselectedLabels: true, // Tampilkan label item yang tidak dipilih
-        selectedItemColor: Color.fromARGB(255, 28, 95, 30), // Warna teks untuk item yang dipilih
-        unselectedItemColor: Colors.grey, // Warna teks untuk item yang tidak dipilih
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        selectedItemColor: Color.fromARGB(255, 28, 95, 30),
+        unselectedItemColor: Colors.grey,
         currentIndex: _selectedIndex,
-        onTap:(index) => {
+        onTap: (index) {
           setState(() {
             _selectedIndex = index;
             if (index == 0) {
@@ -118,7 +95,8 @@ class _HomePageState extends State<HomePage> {
             } else if (index == 1) {
               Navigator.pushReplacementNamed(context, '/profile');
             }
-        })},
+          });
+        },
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
