@@ -100,7 +100,7 @@ class _EditVolunteerPageState extends State<EditVolunteerPage> {
       if (response.statusCode == 200) {
         Navigator.pushNamed(context, '/homepage');
       } else {
-        throw DioError(response: response, requestOptions: null);
+        // throw DioError(response: response);
       }
     } catch (e) {
       print('Update failed: $e');

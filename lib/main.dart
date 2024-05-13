@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         '/profile':(context) => ProfilePage(),
         '/add':(context) => AddVolunteerPage(),
         '/listVolunteer': (context) => VolunteerListPage(),
-        '/edit': (context) => EditVolunteerPage(),
+        // '/edit': (context) => EditVolunteerPage(),
       },
       initialRoute: '/',
       debugShowCheckedModeBanner: false,
