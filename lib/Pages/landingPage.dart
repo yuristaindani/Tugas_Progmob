@@ -4,9 +4,6 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'registerPage.dart';
-import 'loginPage.dart';
-
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -98,8 +95,7 @@ class LandingPage extends StatelessWidget {
                 child: 
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context, 
-                      MaterialPageRoute(builder: (context) => LoginPage()),);
+                    Navigator.pushNamed(context,'/login');
                   },
                   style: ElevatedButton.styleFrom(
                     shape:RoundedRectangleBorder(
@@ -125,8 +121,7 @@ class LandingPage extends StatelessWidget {
                   child: 
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context, 
-                      MaterialPageRoute(builder: (context) => RegisterPage()),); 
+                      Navigator.pushNamed(context,'/register'); 
                     },
                     style: ElevatedButton.styleFrom(
                       shape:RoundedRectangleBorder(

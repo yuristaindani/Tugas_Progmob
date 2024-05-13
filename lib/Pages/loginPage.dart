@@ -1,19 +1,24 @@
+
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_application_1/Pages/homePage.dart';
-import 'package:flutter_application_1/Pages/registerPage.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_application_1/components/myTextFields.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get_storage/get_storage.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
+  final _dio = Dio();
+  final _storage = GetStorage();
+  final _apiUrl = 'https://mobileapis.manpits.xyz/api';
+
   //text editing controller
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   @override 
@@ -47,8 +52,8 @@ class LoginPage extends StatelessWidget {
                   width: 2000,
                   height: 50,
                   child: MyTextFields(
-                      controller: usernameController, 
-                      hintText: 'Enter your username', 
+                      controller: emailController, 
+                      hintText: 'Enter your email', 
                       obscureText: false,
                   ),
                 ),
@@ -98,8 +103,7 @@ class LoginPage extends StatelessWidget {
                   child: 
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => HomePage()),);
+                      goLogin(context);
                     },
                     style: ElevatedButton.styleFrom(
                       shape:RoundedRectangleBorder(
@@ -224,8 +228,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => RegisterPage()),);
+                          Navigator.pushNamed(context, '/register');
                         },
                         child: 
                         Text('Register Now',
@@ -244,5 +247,22 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void goLogin(BuildContext context) async {
+    try {
+      final _response = await _dio.post(
+        '${_apiUrl}/login',
+        data: {
+          'email': emailController.text,
+          'password':  passwordController.text,
+        }
+      );
+      print(_response.data);
+      _storage.write('token', _response.data ['data']['token']);
+      Navigator.pushNamed(context, '/home');
+    } on DioException catch (e) {
+      print ('${e.response} - ${e.response?.statusCode}');
+    }
   }
 }
