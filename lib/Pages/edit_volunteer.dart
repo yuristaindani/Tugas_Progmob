@@ -127,51 +127,93 @@ class _EditVolunteerPageState extends State<EditVolunteerPage> {
   }
 
   Future<void> editMemberDetails(BuildContext context) async {
-  String noInduk = noIndukController.text.trim();
-  String nama = namaController.text.trim();
-  String alamat = alamatController.text.trim();
-  String tglLahir = tglLahirController.text.trim();
-  String telepon = teleponController.text.trim();
+    String noInduk = noIndukController.text.trim();
+    String nama = namaController.text.trim();
+    String alamat = alamatController.text.trim();
+    String tglLahir = tglLahirController.text.trim();
+    String telepon = teleponController.text.trim();
 
-  final response = await _dio.put(
-    '$_apiUrl/anggota/${volunteer?.id}',
-    data: {
-      'nomor_induk': noInduk,
-      'nama': nama,
-      'alamat': alamat,
-      'tgl_lahir': tglLahir,
-      'telepon': telepon,
-    },
-    options: Options(
-      headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
-    ),
-  );
+    setState(() {
+      isLoading = true;
+    });
 
-  if (response.statusCode == 200) {
-    // Data berhasil diperbarui
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Data berhasil diperbarui.'),
-        duration: Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-    Navigator.pushReplacementNamed(context, '/daftarVolunteer');
-  } else {
-    // Terjadi kesalahan saat memperbarui data
-    print('Terjadi kesalahan: ${response.statusCode}');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Terjadi kesalahan saat memperbarui data. Silakan coba lagi.',
-          textAlign: TextAlign.center,
+    try {
+      final response = await _dio.put(
+        '$_apiUrl/anggota/${volunteer?.id}',
+        data: {
+          'nomor_induk': noInduk,
+          'nama': nama,
+          'alamat': alamat,
+          'tgl_lahir': tglLahir,
+          'telepon': telepon,
+        },
+        options: Options(
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
         ),
-        duration: Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
+      );
 
-  Navigator.of(context).pop(); // Tutup dialog edit
-}
+      if (response.statusCode == 200) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Success"),
+              content: Text("Volunteer has been successfully edited."),
+              actions: <Widget>[
+                MaterialButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Tutup dialog
+                    Navigator.pushReplacementNamed(context, '/daftarVolunteer'); // Navigasi ke halaman beranda
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text("Failed to edit. Please try again later."),
+              actions: <Widget>[
+                MaterialButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Tutup dialog
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } on DioException catch (e) {
+      print('${e.response} - ${e.response?.statusCode}');
+      String errorMessage = 'Nomor Induk is already in use. Please try again.';
+      if (e.response?.statusCode == 409) {
+        errorMessage = 'Nomor Induk already in use.';
+      }
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text(errorMessage),
+            actions: <Widget>[
+              MaterialButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Tutup dialog
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 }

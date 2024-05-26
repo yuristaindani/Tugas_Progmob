@@ -56,6 +56,14 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pushNamed(context, '/daftarVolunteer');
               },
             ),
+             ListTile(
+              leading: Icon(Icons.account_balance_wallet),
+              title: Text('Transaksi Volunteer'),
+              onTap: () {
+                Navigator.pop(context); // Tutup drawer
+                Navigator.pushNamed(context, '/transaksi');
+              },
+            ),
           ],
         ),
       ),
@@ -91,7 +99,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _selectedIndex = index;
             if (index == 0) {
-              Navigator.pushReplacementNamed(context, '/home');
+              Navigator.pushReplacementNamed(context, '/homepage');
             } else if (index == 1) {
               Navigator.pushReplacementNamed(context, '/profile');
             }

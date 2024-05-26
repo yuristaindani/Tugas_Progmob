@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart';
 
-class VolunteerListPage extends StatefulWidget {
+class ListTabunganPage extends StatefulWidget {
   @override
-  _VolunteerListPageState createState() => _VolunteerListPageState();
+  _ListTabunganPageState createState() => _ListTabunganPageState();
 }
 
-class _VolunteerListPageState extends State<VolunteerListPage> {
+class _ListTabunganPageState extends State<ListTabunganPage> {
   final _storage = GetStorage();
   final _dio = Dio();
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
@@ -25,7 +25,18 @@ class _VolunteerListPageState extends State<VolunteerListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Volunteer List'),
+        title: Row(
+          children: [
+            Text('List Tabungan'),
+            Spacer(),
+            IconButton(
+              icon: Icon(Icons.receipt_long),
+              onPressed: () {
+                Navigator.pushNamed(context, '/jenistransaksi');
+              },
+            ),
+          ],
+        ),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -43,28 +54,24 @@ class _VolunteerListPageState extends State<VolunteerListPage> {
                       volunteer.nama ?? '',
                       style: TextStyle(color: Colors.white),
                     ),
-                    subtitle: Text(
-                      volunteer.alamat ?? '',
-                      style: TextStyle(color: Colors.white),
-                    ),
                     onTap: () {
-                      Navigator.pushNamed(context, '/detail', arguments: volunteer?.id);
+                      Navigator.pushNamed(context, '/detailtabungan', arguments: volunteer?.id);
                     },
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: Icon(Icons.edit),
+                          icon: Icon(Icons.add),
                           color: Colors.white,
                           onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/edit', arguments: volunteer?.id);
+                            Navigator.pushNamed(context, '/addtabungan', arguments: volunteer?.id);
                           },
                         ),
                         IconButton(
-                          icon: Icon(Icons.delete),
+                          icon: Icon(Icons.attach_money),
                           color: Colors.white,
                           onPressed: () {
-                            deleteVolunteer(volunteer.id);
+                            Navigator.pushNamed(context, '/saldotabungan', arguments: volunteer?.id);
                           },
                         ),
                       ],
@@ -96,12 +103,7 @@ class _VolunteerListPageState extends State<VolunteerListPage> {
             volunteerList = userData
                 .map((volunteerJson) => Volunteer.fromJson({
                   "id": volunteerJson["id"],
-                  "nomor_induk": volunteerJson["nomor_induk"],
                   "nama": volunteerJson["nama"],
-                  "alamat": volunteerJson["alamat"],
-                  "tgl_lahir": volunteerJson["tgl_lahir"],
-                  "telepon": volunteerJson["telepon"],
-                  "status": volunteerJson["status"], // Pastikan status sudah ada di JSON response
                 }))
                 .toList();
           });
@@ -143,32 +145,17 @@ class _VolunteerListPageState extends State<VolunteerListPage> {
 
 class Volunteer {
   final int id;
-  final String nomorInduk;
   final String nama;
-  final String alamat;
-  final String tanggalLahir;
-  final String telepon;
-  final int status;
 
   Volunteer({
     required this.id,
-    required this.nomorInduk,
     required this.nama,
-    required this.alamat,
-    required this.tanggalLahir,
-    required this.telepon,
-    required this.status,
   });
 
   factory Volunteer.fromJson(Map<String, dynamic> json) {
     return Volunteer(
       id: json['id'] ?? 0,
-      nomorInduk: json['nomor_induk'].toString(),
       nama: json['nama'] ?? '',
-      alamat: json['alamat'] ?? '',
-      tanggalLahir: json['tgl_lahir'] ?? '',
-      telepon: json['telepon'] ?? '',
-      status: json['status'] ?? 0,
     );
   }
 }

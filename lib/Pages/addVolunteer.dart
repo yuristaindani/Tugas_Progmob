@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -32,189 +30,212 @@ class _AddVolunteerPageState extends State<AddVolunteerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-        ),    
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(30.0),
-              child: Column(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(30.0),
+          child: Column(
+            children: [
+              //Tulisan Register
+              Text(
+                'Add more Volunteers',
+                style: GoogleFonts.urbanist(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                'Enter your personal informations!',
+                style: GoogleFonts.urbanist(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+
+              //Kolom No Induk
+              SizedBox(
+                height: 30,
+              ),
+              Row(
                 children: [
-                  //Tulisan Register
-                  Text('Add more Volunteers',
-                  style: GoogleFonts.urbanist(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),),
-                  Text('Enter your personal informations!',
-                  style: GoogleFonts.urbanist(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),),
-
-                  //Kolom No Induk
-                  SizedBox( 
-                    height: 30,),
-                  Row(
-                    children: [
-                      Text('No Induk',
-                      style: GoogleFonts.lato(
-                        fontSize: 13,
-                        color: Colors.black,
-                      ),),
-                    ],
-                  ),
-                  Container(
-                    width: 2000,
-                    height: 40,
-                    child: MyTextFields(
-                      controller: noIndukController, 
-                      hintText: 'No Induk', 
-                      obscureText: false,
-                  ),
-                ),
-
-                  //Kolom Fullname
-                  SizedBox( 
-                    height: 30,),
-                  Row(
-                    children: [
-                      Text('Fullname',
-                      style: GoogleFonts.lato(
-                        fontSize: 13,
-                        color: Colors.black,
-                      ),),
-                    ],
-                  ),
-                  Container(
-                    width: 2000,
-                    height: 40,
-                    child: MyTextFields(
-                      controller: namaController, 
-                      hintText: 'Fullname', 
-                      obscureText: false,
-                  ),
-                ),
-
-                //Kolom Alamat
-                  SizedBox( 
-                    height: 30,),
-                  Row(
-                    children: [
-                      Text('Address',
-                      style: GoogleFonts.lato(
-                        fontSize: 13,
-                        color: Colors.black,
-                      ),),
-                    ],
-                  ),
-                  Container(
-                    width: 2000,
-                    height: 40,
-                    child: MyTextFields(
-                      controller: alamatController, 
-                      hintText: 'Address', 
-                      obscureText: false,
-                  ),
-                ),
-
-                //Kolom Date of Birth
-                SizedBox(
-                  height: 20,),
-                Row(
-                  children: [
-                    Text('Date of Birth',
+                  Text(
+                    'No Induk',
                     style: GoogleFonts.lato(
                       fontSize: 13,
                       color: Colors.black,
-                    ),),
-                  ],
-                ),
-                Container(
-                  width: 2000,
-                  height: 40,
-                  child: MyTextFields(
-                    controller: tanggalLahirController, 
-                    hintText: 'Date of Birth', 
-                    obscureText: false,
+                    ),
                   ),
+                ],
+              ),
+              Container(
+                width: 2000,
+                height: 40,
+                child: MyTextFields(
+                  controller: noIndukController,
+                  hintText: 'No Induk',
+                  obscureText: false,
+                  enabled: true,
                 ),
+              ),
 
-                //Kolom Phone
-                SizedBox(
-                  height: 20,),
-                Row(
-                  children: [
-                    Text('Phone',
+              //Kolom Fullname
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Fullname',
                     style: GoogleFonts.lato(
-                    fontSize: 13,
-                    color: Colors.black,
-                    ),),
-                  ],
-                ),
-                Container(
-                  width: 2000,
-                  height: 40,
-                  child:  MyTextFields(
-                    controller: phoneController, 
-                    hintText: 'Phone', 
-                    obscureText: false,
+                      fontSize: 13,
+                      color: Colors.black,
+                    ),
                   ),
+                ],
+              ),
+              Container(
+                width: 2000,
+                height: 40,
+                child: MyTextFields(
+                  controller: namaController,
+                  hintText: 'Fullname',
+                  obscureText: false,
+                  enabled: true,
                 ),
+              ),
 
-                //tombol add
-                SizedBox(
-                  height: 50,),
-                Container(
-                  width: 350,
-                  height: 50,
-                  child: 
-                  ElevatedButton(
+              //Kolom Alamat
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Address',
+                    style: GoogleFonts.lato(
+                      fontSize: 13,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                width: 2000,
+                height: 40,
+                child: MyTextFields(
+                  controller: alamatController,
+                  hintText: 'Address',
+                  obscureText: false,
+                  enabled: true,
+                ),
+              ),
+
+              //Kolom Date of Birth
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Date of Birth',
+                    style: GoogleFonts.lato(
+                      fontSize: 13,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                width: 2000,
+                height: 40,
+                child: MyTextFields(
+                  controller: tanggalLahirController,
+                  hintText: 'Date of Birth',
+                  obscureText: false,
+                  enabled: true,
+                ),
+              ),
+
+              //Kolom Phone
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Phone',
+                    style: GoogleFonts.lato(
+                      fontSize: 13,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                width: 2000,
+                height: 40,
+                child: MyTextFields(
+                  controller: phoneController,
+                  hintText: 'Phone',
+                  obscureText: false,
+                  enabled: true,
+                ),
+              ),
+
+              //tombol add
+              SizedBox(
+                height: 50,
+              ),
+              Container(
+                width: 350,
+                height: 50,
+                child: ElevatedButton(
                     onPressed: () {
                       goAddVolunteer(context);
                     },
                     style: ElevatedButton.styleFrom(
-                      shape:RoundedRectangleBorder(
-                        side: const BorderSide(
-                          color: Color.fromARGB(255, 28, 95, 30)),
-                        borderRadius: BorderRadius.circular(5)),
+                      shape: RoundedRectangleBorder(
+                          side: const BorderSide(
+                              color: Color.fromARGB(255, 28, 95, 30)),
+                          borderRadius: BorderRadius.circular(5)),
                       backgroundColor: Color.fromARGB(255, 28, 95, 30),
-                    ), 
-                    child: 
-                    Text('Add Volunteer',
+                    ),
+                    child: Text(
+                      'Add Volunteer',
                       style: GoogleFonts.urbanist(
                         color: Colors.white,
                       ),
-                    )
-                  ),
-                ),
-              ],
-            ), 
+                    )),
+              ),
+            ],
           ),
         ),
-        backgroundColor: Colors.white,   
-     );
-    }
-
-void goAddVolunteer(BuildContext context) async {
-  try {
-    final _response = await _dio.post(
-      '${_apiUrl}/anggota',
-      options: Options(
-        headers: {'Authorization': 'Bearer ${_storage.read('token')}'}
       ),
-      data: {
-        'nomor_induk': noIndukController.text,
-        'nama': namaController.text,
-        'alamat': alamatController.text,
-        'tgl_lahir': tanggalLahirController.text,
-        'telepon': phoneController.text,
-        'status_aktif': 1,
-      }
-    );      
-    _storage.write('data', _response.data['data']);
-     if (_response.statusCode == 200) {
+      backgroundColor: Colors.white,
+    );
+  }
+
+  void goAddVolunteer(BuildContext context) async {
+    try {
+      final _response = await _dio.post(
+        '${_apiUrl}/anggota',
+        options: Options(
+            headers: {'Authorization': 'Bearer ${_storage.read('token')}'}
+        ),
+        data: {
+          'nomor_induk': noIndukController.text,
+          'nama': namaController.text,
+          'alamat': alamatController.text,
+          'tgl_lahir': tanggalLahirController.text,
+          'telepon': phoneController.text,
+          'status_aktif': 1,
+        }
+      );
+
+      if (_response.statusCode == 200) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -226,7 +247,7 @@ void goAddVolunteer(BuildContext context) async {
                   child: Text("OK"),
                   onPressed: () {
                     Navigator.of(context).pop(); // Tutup dialog
-                    Navigator.pushNamed(context, '/homepage'); // Navigasi ke halaman beranda
+                    Navigator.pushNamed(context, '/add'); // Navigasi ke halaman beranda
                   },
                 ),
               ],
@@ -253,19 +274,23 @@ void goAddVolunteer(BuildContext context) async {
         );
       }
     } on DioException catch (e) {
-      // Handle jika terjadi kesalahan
       print('${e.response} - ${e.response?.statusCode}');
+      String errorMessage = 'Nomor Induk is already in use. Please try again.';
+      if (e.response?.statusCode == 409) {
+        errorMessage = 'Nomor Induk already in use.';
+      }
+
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Error"),
-            content: Text("Failed to add member. Please try again later."),
+            content: Text(errorMessage),
             actions: <Widget>[
               MaterialButton(
                 child: Text("OK"),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(); // Tutup dialog
                 },
               ),
             ],

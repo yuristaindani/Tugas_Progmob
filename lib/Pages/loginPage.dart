@@ -55,6 +55,7 @@ class LoginPage extends StatelessWidget {
                       controller: emailController, 
                       hintText: 'Enter your email', 
                       obscureText: false,
+                      enabled: true,
                   ),
                 ),
 
@@ -70,6 +71,7 @@ class LoginPage extends StatelessWidget {
                     controller: passwordController, 
                     hintText: 'Enter your password', 
                     obscureText: true,
+                    enabled: true,
                   ),
                 ),
 

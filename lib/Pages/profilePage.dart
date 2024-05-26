@@ -117,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
           setState(() {
             _selectedIndex = index;
             if (index == 0) {
-              Navigator.pushReplacementNamed(context, '/home');
+              Navigator.pushReplacementNamed(context, '/homepage');
             } else if (index == 1) {
               Navigator.pushReplacementNamed(context, '/profile');
             }

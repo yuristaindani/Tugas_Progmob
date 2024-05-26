@@ -68,6 +68,7 @@ class RegisterPage extends StatelessWidget {
                       controller: fullnameController, 
                       hintText: 'Fullname', 
                       obscureText: false,
+                      enabled: true,
                   ),
                 ),
 
@@ -90,6 +91,7 @@ class RegisterPage extends StatelessWidget {
                     controller: usernameController, 
                     hintText: 'Username', 
                     obscureText: false,
+                    enabled: true,
                   ),
                 ),
 
@@ -112,6 +114,7 @@ class RegisterPage extends StatelessWidget {
                     controller: emailController, 
                     hintText: 'Email', 
                     obscureText: false,
+                    enabled: true,
                   ),
                 ),
 
@@ -134,6 +137,7 @@ class RegisterPage extends StatelessWidget {
                     controller: phoneController, 
                     hintText: 'Phone', 
                     obscureText: false,
+                    enabled: true,
                   ),
                 ),
 
@@ -155,7 +159,8 @@ class RegisterPage extends StatelessWidget {
                   child: MyTextFields(
                     controller: passwordController, 
                     hintText: 'Password', 
-                    obscureText: true
+                    obscureText: true,
+                    enabled: true,
                   ),
                 ),
 
@@ -178,7 +183,8 @@ class RegisterPage extends StatelessWidget {
                   MyTextFields(
                     controller: confirmpasswordController, 
                     hintText: 'Confirm Password', 
-                    obscureText: true
+                    obscureText: true,
+                    enabled: true,
                   ),
                 ),
 
