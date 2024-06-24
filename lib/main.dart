@@ -14,7 +14,6 @@ import 'package:flutter_application_1/Pages/loginPage.dart';
 import 'package:flutter_application_1/Pages/registerPage.dart';
 import 'package:flutter_application_1/Pages/ListTabungan.dart';
 import 'package:flutter_application_1/Pages/AddTabunganPage.dart';
-import 'package:flutter_application_1/Pages/detailVolunteer.dart';
 import 'package:flutter_application_1/Pages/detailTabungan.dart';
 import 'package:flutter_application_1/Pages/lihatSaldo.dart';
 

@@ -27,7 +27,7 @@ class _ListTabunganPageState extends State<ListTabunganPage> {
       appBar: AppBar(
         title: Row(
           children: [
-            Text('List Tabungan'),
+            Text('List Transaksi'),
             Spacer(),
             IconButton(
               icon: Icon(Icons.receipt_long),

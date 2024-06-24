@@ -81,7 +81,7 @@ class _ListDetailTabunganPageState extends State<ListDetailTabunganPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('List Tabungan'),
+        title: Text('Detail Transaksi'),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
