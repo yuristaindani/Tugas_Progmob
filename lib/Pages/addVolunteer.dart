@@ -247,7 +247,7 @@ class _AddVolunteerPageState extends State<AddVolunteerPage> {
                   child: Text("OK"),
                   onPressed: () {
                     Navigator.of(context).pop(); // Tutup dialog
-                    Navigator.pushNamed(context, '/add'); // Navigasi ke halaman beranda
+                    Navigator.pushNamed(context, '/daftarVolunteer'); // Navigasi ke halaman beranda
                   },
                 ),
               ],

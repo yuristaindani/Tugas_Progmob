@@ -16,6 +16,8 @@ import 'package:flutter_application_1/Pages/ListTabungan.dart';
 import 'package:flutter_application_1/Pages/AddTabunganPage.dart';
 import 'package:flutter_application_1/Pages/detailTabungan.dart';
 import 'package:flutter_application_1/Pages/lihatSaldo.dart';
+import 'package:flutter_application_1/Pages/listSettingBunga.dart';
+import 'package:flutter_application_1/Pages/addSettingBunga.dart';
 
 
 Future <void> main() async {
@@ -45,6 +47,8 @@ class MyApp extends StatelessWidget {
         '/jenistransaksi': (context) => TransaksiView(),
         '/detailtabungan': (context) =>ListDetailTabunganPage(),
         '/saldotabungan': (context) =>LihatSaldoPage(),
+        '/listbunga': (context) =>ListSettingBungaPage(),
+        '/addbunga': (context) =>AddSettingBungaPage(),
       },
       initialRoute: '/',
       debugShowCheckedModeBanner: false,

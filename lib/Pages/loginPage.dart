@@ -251,20 +251,46 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  void goLogin(BuildContext context) async {
-    try {
-      final _response = await _dio.post(
-        '${_apiUrl}/login',
-        data: {
-          'email': emailController.text,
-          'password':  passwordController.text,
-        }
-      );
-      print(_response.data);
-      _storage.write('token', _response.data ['data']['token']);
-      Navigator.pushNamed(context, '/homepage');
-    } on DioException catch (e) {
-      print ('${e.response} - ${e.response?.statusCode}');
+void goLogin(BuildContext context) async {
+  try {
+    final _response = await _dio.post(
+      '${_apiUrl}/login',
+      data: {
+        'email': emailController.text,
+        'password': passwordController.text,
+      },
+    );
+
+    print(_response.data);
+    _storage.write('token', _response.data['data']['token']);
+    Navigator.pushNamed(context, '/homepage');
+  } on DioError catch (e) {
+    String errorMessage = 'Invalid email or password. Please try again.';
+    if (e.response?.statusCode == 401) {
+      errorMessage = 'Invalid email or password. Please check your credentials.';
+    } else if (e.response?.statusCode == 500) {
+      errorMessage = 'Internal server error. Please try again later.';
     }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Login Failed!'),
+          content: Text(errorMessage),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+
+    print('${e.response} - ${e.response?.statusCode}');
   }
+}
 }

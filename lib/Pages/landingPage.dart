@@ -87,7 +87,7 @@ class LandingPage extends StatelessWidget {
                 textAlign: TextAlign.center
               ),
               SizedBox(
-                height: 200,
+                height: 100,
               ),
               Container(
                 width: 350,

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:intl/intl.dart'; // Import untuk NumberFormat
 
 class ListDetailTabunganPage extends StatefulWidget {
   const ListDetailTabunganPage({Key? key}) : super(key: key);
@@ -19,7 +18,6 @@ class _ListDetailTabunganPageState extends State<ListDetailTabunganPage> {
 
   List<Tabungan> tabunganList = [];
   bool isLoading = false;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -79,43 +77,11 @@ class _ListDetailTabunganPageState extends State<ListDetailTabunganPage> {
     }
   }
 
-  String getJenisTransaksi(int? trxId) {
-    switch (trxId) {
-      case 1:
-        return 'Saldo Awal';
-      case 2:
-        return 'Simpanan';
-      case 3:
-        return 'Penarikan';
-      case 4:
-        return 'Bunga Simpanan';
-      case 5:
-        return 'Koreksi Penambahan';
-      case 6:
-        return 'Koreksi Pengurangan';
-      default:
-        return 'Jenis tidak diketahui';
-    }
-  }
-
-  String formatNominal(int? nominal) {
-    final formatter = NumberFormat('#,###', 'id_ID');
-    return nominal != null ? formatter.format(nominal) : 'Nominal tidak tersedia';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text(
-          'Detail Transaksi',
-          style: GoogleFonts.urbanist(
-            fontSize: 24,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text('Detail Transaksi'),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -132,18 +98,16 @@ class _ListDetailTabunganPageState extends State<ListDetailTabunganPage> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         tileColor: Color.fromARGB(255, 28, 95, 30),
-                        title: Text(
-                          'Jenis Transaksi: ${getJenisTransaksi(tabungan.trxId)}',
-                          style: GoogleFonts.urbanist(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Nominal: ${formatNominal(tabungan.trxNominal)}',
-                          style: GoogleFonts.urbanist(color: Colors.white),
-                        ),
-                      ),
+                        title: Text('ID Transaksi: ${tabungan.trxId}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold
+                        ),),
+                        subtitle: Text('Nominal: ${tabungan.trxNominal}',
+                        style: TextStyle(
+                          color: Colors.white
+                        ),),
+                    ),
                     );
                   },
                 ),
@@ -156,13 +120,13 @@ class Tabungan {
   int? trxNominal;
 
   Tabungan({
-    this.trxId,
-    this.trxNominal,
+    this.trxId, 
+    this.trxNominal
   });
 
   Tabungan.fromJson(Map<String, dynamic> json)
-      : trxId = json['trx_id'],
-        trxNominal = json['trx_nominal'];
+     : trxId = json['trx_id'],
+      trxNominal = json['trx_nominal'];
 
   Map<String, dynamic> toJson() {
     return {

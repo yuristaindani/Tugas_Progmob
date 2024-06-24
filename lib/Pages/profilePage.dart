@@ -15,7 +15,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 3;
 
   String _name= '';
   String _email='';
@@ -53,24 +53,66 @@ class _ProfilePageState extends State<ProfilePage> {
                     backgroundColor: Colors.white,
                   ) ,
                 ),
-                SizedBox(
-                  height: 40,
+                SizedBox(height: 40),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Name',
+                      style: GoogleFonts.lato(
+                        fontSize: 13,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.grey.shade100,
+                      ),
+                      child: Text(
+                        _name,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                Text(_name,
-                style: GoogleFonts.urbanist(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),),
-                SizedBox(
-                  height: 15,
+                SizedBox(height: 15),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Email',
+                      style: GoogleFonts.lato(
+                        fontSize: 13,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.grey.shade100,
+                      ),
+                      child: Text(
+                        _email,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                Text(_email,
-                style: GoogleFonts.urbanist(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),),
 
                 //tombol logout
                 SizedBox(
@@ -108,27 +150,45 @@ class _ProfilePageState extends State<ProfilePage> {
 
       //tombol Navbar
       bottomNavigationBar: BottomNavigationBar(
-        showSelectedLabels: true, // Tampilkan label item yang dipilih
-        showUnselectedLabels: true, // Tampilkan label item yang tidak dipilih
-        selectedItemColor: Color.fromARGB(255, 28, 95, 30), // Warna teks untuk item yang dipilih
-        unselectedItemColor: Colors.grey, // Warna teks untuk item yang tidak dipilih
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        selectedItemColor: Color.fromARGB(255, 28, 95, 30),
+        unselectedItemColor: Colors.grey,
         currentIndex: _selectedIndex,
-        onTap:(index) => {
+        onTap: (index) {
           setState(() {
             _selectedIndex = index;
-            if (index == 0) {
-              Navigator.pushReplacementNamed(context, '/homepage');
-            } else if (index == 1) {
-              Navigator.pushReplacementNamed(context, '/profile');
+            switch (index) {
+              case 0:
+                Navigator.pushReplacementNamed(context, '/homepage');
+                break;
+              case 1:
+                Navigator.pushReplacementNamed(context, '/daftarVolunteer');
+                break;
+              case 2:
+                Navigator.pushReplacementNamed(context, '/listbunga');
+                break;
+              case 3:
+                Navigator.pushReplacementNamed(context, '/profile');
+                break;
             }
-        })},
+          });
+        },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, color: _selectedIndex == 0 ? Color.fromARGB(255, 28, 95, 30) : Colors.grey),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.group, color: _selectedIndex == 1 ? Color.fromARGB(255, 28, 95, 30) : Colors.grey),
+            label: 'Member',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_florist, color: _selectedIndex == 2 ? Color.fromARGB(255, 28, 95, 30) : Colors.grey),
+            label: 'Bunga',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, color: _selectedIndex == 3 ? Color.fromARGB(255, 28, 95, 30) : Colors.grey),
             label: 'Profile',
           ),
         ],

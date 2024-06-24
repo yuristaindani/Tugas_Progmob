@@ -258,16 +258,68 @@ void goRegister(BuildContext context) async {
     final _response = await _dio.post(
       '${_apiUrl}/register',
       data: {
-        'name': usernameController.text,
+        'name': fullnameController.text,
+        'username': usernameController.text,
         'email': emailController.text,
+        'phone': phoneController.text,
         'password': passwordController.text,
-      }
+        'password_confirmation': confirmpasswordController.text,
+      },
     );
+
     print(_response.data);
-    _storage.write('token', _response.data ['data']['token']);
-    Navigator.pushNamed(context, '/login');
-    } on DioException catch (e) {
-      print ('${e.response} - ${e.response?.statusCode}');
+
+    // Menyimpan token ke storage jika registrasi berhasil
+    _storage.write('token', _response.data['data']['token']);
+
+    // Menampilkan dialog sukses
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Registration Successful'),
+          content: Text('Your registration was successful.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/login');
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+    
+  } on DioError catch (e) {
+    String errorMessage = 'Registration failed. Please try again.';
+    if (e.response?.statusCode == 422) {
+      errorMessage = 'Validation error. Please check your input fields.';
+    } else if (e.response?.statusCode == 500) {
+      errorMessage = 'Internal server error. Please try again later.';
     }
-  } 
+
+    // Menampilkan dialog error
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Registration Failed'),
+          content: Text(errorMessage),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+
+    print('${e.response} - ${e.response?.statusCode}');
+  }
+}
 }

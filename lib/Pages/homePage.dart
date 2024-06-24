@@ -9,6 +9,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  String searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -23,49 +24,7 @@ class _HomePageState extends State<HomePage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 28, 95, 30),
-              ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.add),
-              title: Text('Add Volunteer'),
-              onTap: () {
-                Navigator.pop(context); // Tutup drawer
-                Navigator.pushNamed(context, '/add');
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.people),
-              title: Text('List Volunteer'),
-              onTap: () {
-                Navigator.pop(context); // Tutup drawer
-                Navigator.pushNamed(context, '/daftarVolunteer');
-              },
-            ),
-             ListTile(
-              leading: Icon(Icons.account_balance_wallet),
-              title: Text('Transaksi Volunteer'),
-              onTap: () {
-                Navigator.pop(context); // Tutup drawer
-                Navigator.pushNamed(context, '/transaksi');
-              },
-            ),
-          ],
-        ),
+        automaticallyImplyLeading: false, // Menyembunyikan tombol kembali
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -80,7 +39,13 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(50),
                     border: Border.all(color: Colors.grey),
                   ),
-                  child: SearchThing(),
+                  child: SearchThing(
+                    onSearch: (query) {
+                      setState(() {
+                        searchQuery = query;
+                      });
+                    },
+                  ),
                 ),
                 SizedBox(height: 20),
                 // More Widgets Here
@@ -98,20 +63,37 @@ class _HomePageState extends State<HomePage> {
         onTap: (index) {
           setState(() {
             _selectedIndex = index;
-            if (index == 0) {
-              Navigator.pushReplacementNamed(context, '/homepage');
-            } else if (index == 1) {
-              Navigator.pushReplacementNamed(context, '/profile');
+            switch (index) {
+              case 0:
+                Navigator.pushReplacementNamed(context, '/homepage');
+                break;
+              case 1:
+                Navigator.pushReplacementNamed(context, '/daftarVolunteer');
+                break;
+              case 2:
+                Navigator.pushReplacementNamed(context, '/listbunga');
+                break;
+              case 3:
+                Navigator.pushReplacementNamed(context, '/profile');
+                break;
             }
           });
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, color: _selectedIndex == 0 ? Color.fromARGB(255, 28, 95, 30) : Colors.grey),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.group, color: _selectedIndex == 1 ? Color.fromARGB(255, 28, 95, 30) : Colors.grey),
+            label: 'Member',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_florist, color: _selectedIndex == 2 ? Color.fromARGB(255, 28, 95, 30) : Colors.grey),
+            label: 'Bunga',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, color: _selectedIndex == 3 ? Color.fromARGB(255, 28, 95, 30) : Colors.grey),
             label: 'Profile',
           ),
         ],
