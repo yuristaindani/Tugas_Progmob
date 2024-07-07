@@ -19,6 +19,7 @@ class _AddTabunganPageState extends State<AddTabunganPage> {
   late int anggotaId;
   late Volunteer volunteer;
   late String nama;
+  late String nomorInduk = ''; // Inisialisasi nomorInduk dengan nilai default kosong
 
   TextEditingController nominalController = TextEditingController();
   TextEditingController idTransaksiController = TextEditingController();
@@ -40,58 +41,59 @@ class _AddTabunganPageState extends State<AddTabunganPage> {
     if (args != null) {
       anggotaId = args['id'] as int;
       nama = args['nama'] as String;
+      nomorInduk = args['nomor_induk'] as String; // Set nilai nomorInduk dari args
     }
   }
 
-Future<void> insertTransaksiTabungan() async {
-  final trxNominal = nominalController.text.replaceAll('.', '');
-  final trxId = idTransaksiController.text;
+  Future<void> insertTransaksiTabungan() async {
+    final trxNominal = nominalController.text.replaceAll('.', '');
+    final trxId = idTransaksiController.text;
 
-  try {
-    final response = await _dio.post(
-      '$_apiUrl/tabungan',
-      options: Options(
-        headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
-      ),
-      data: {
-        'anggota_id': anggotaId,
-        'trx_id': trxId,
-        'trx_nominal': trxNominal,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Success"),
-            content: Text("Transaksi has been successfully added."),
-            actions: <Widget>[
-              MaterialButton(
-                child: Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close dialog
-                  Navigator.popUntil(context, ModalRoute.withName('/detail')); // Navigate back to previous page
-                },
-              ),
-            ],
-          );
+    try {
+      final response = await _dio.post(
+        '$_apiUrl/tabungan',
+        options: Options(
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+        ),
+        data: {
+          'anggota_id': anggotaId,
+          'trx_id': trxId,
+          'trx_nominal': trxNominal,
         },
       );
-    } else {
-      showErrorDialog("Failed to add transaction. Please try again.");
+
+      if (response.statusCode == 200) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Success"),
+              content: Text("Transaction has been successfully added."),
+              actions: <Widget>[
+                MaterialButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close dialog
+                    Navigator.popUntil(
+                        context, ModalRoute.withName('/detail')); // Navigate back to previous page
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        showErrorDialog("Failed to add transaction. Please try again.");
+      }
+    } on DioError catch (e) {
+      String errorMessage =
+          'Failed to add transaction. Please try again later.';
+      if (e.response?.statusCode == 409) {
+        errorMessage = 'Transaction already exists.';
+      }
+      showErrorDialog(errorMessage);
     }
-  } on DioError catch (e) {
-    String errorMessage = 'Failed to add transaction. Please try again later.';
-    if (e.response?.statusCode == 409) {
-      errorMessage = 'Transaction already exists.';
-    }
-    showErrorDialog(errorMessage);
   }
-}
-
-
 
   void showErrorDialog(String message) {
     showDialog(
@@ -138,7 +140,7 @@ Future<void> insertTransaksiTabungan() async {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'ID',
+              'Nomor Induk',
               style: GoogleFonts.urbanist(
                 fontSize: 16,
                 color: Colors.black,
@@ -157,7 +159,7 @@ Future<void> insertTransaksiTabungan() async {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
-                '$anggotaId',
+                '$nomorInduk',
                 style: GoogleFonts.urbanist(fontSize: 16),
               ),
             ),
@@ -269,22 +271,23 @@ Future<void> insertTransaksiTabungan() async {
                 shape: RoundedRectangleBorder(
                   side: const BorderSide(
                       color: Color.fromARGB(255, 28, 95, 30)),
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 backgroundColor: Color.fromARGB(255, 28, 95, 30),
               ),
-              child: Text(
+              child: Center(child: Text(
                 'Submit',
                 style: GoogleFonts.urbanist(
                     fontSize: 15, color: Colors.white),
               ),
-            ),
+            ),),
           ],
         ),
       ),
     );
   }
 }
+
 class Volunteer {
   final int id;
   final String nomorInduk;
@@ -316,4 +319,3 @@ class Volunteer {
     );
   }
 }
-

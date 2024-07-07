@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class EditVolunteerPage extends StatefulWidget {
   const EditVolunteerPage({Key? key}) : super(key: key);
@@ -42,6 +43,16 @@ class _EditVolunteerPageState extends State<EditVolunteerPage> {
     }
   }
 
+  String formatDate(String date) {
+    DateTime parsedDate = DateTime.parse(date);
+    return DateFormat('dd-MM-yyyy').format(parsedDate);
+  }
+
+  String convertToApiDateFormat(String date) {
+    DateTime parsedDate = DateFormat('dd-MM-yyyy').parse(date);
+    return DateFormat('yyyy-MM-dd').format(parsedDate);
+  }
+
   Future<void> fetchVolunteerDetails(int id) async {
     setState(() {
       isLoading = true;
@@ -65,7 +76,7 @@ class _EditVolunteerPageState extends State<EditVolunteerPage> {
             namaController.text = volunteer.nama;
             alamatController.text = volunteer.alamat;
             teleponController.text = volunteer.telepon;
-            tglLahirController.text = volunteer.tanggalLahir;
+            tglLahirController.text = formatDate(volunteer.tanggalLahir);
             statusAktifValue = volunteer.statusAktif;
           }
         });
@@ -107,7 +118,7 @@ class _EditVolunteerPageState extends State<EditVolunteerPage> {
           'nomor_induk': noIndukController.text,
           'nama': namaController.text,
           'alamat': alamatController.text,
-          'tgl_lahir': tglLahirController.text,
+          'tgl_lahir': convertToApiDateFormat(tglLahirController.text),
           'telepon': teleponController.text,
           'status_aktif': statusAktifValue,
         },

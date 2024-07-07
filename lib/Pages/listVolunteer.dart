@@ -23,7 +23,7 @@ class _VolunteerListPageState extends State<VolunteerListPage> {
   @override
   void initState() {
     super.initState();
-    getVolunteerList();
+    getVolunteerList(); 
   }
 
   @override
@@ -31,7 +31,7 @@ class _VolunteerListPageState extends State<VolunteerListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Volunteer List',
+          'Member List',
           style: GoogleFonts.urbanist(
             fontSize: 24,
             color: Colors.black,
@@ -93,8 +93,7 @@ class _VolunteerListPageState extends State<VolunteerListPage> {
                                   volunteer.nama ?? '',
                                   style: TextStyle(color: Colors.white),
                                 ),
-                                subtitle: Text(
-                                  volunteer.alamat ?? '',
+                                subtitle:Text(volunteer.alamat ?? '',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 onTap: () {

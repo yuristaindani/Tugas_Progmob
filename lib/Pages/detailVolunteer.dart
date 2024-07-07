@@ -63,7 +63,7 @@ class _DetailVolunteerPageState extends State<DetailVolunteerPage> {
             namaController.text = volunteer!.nama;
             alamatController.text = volunteer!.alamat;
             teleponController.text = volunteer!.telepon;
-            tglLahirController.text = volunteer!.tanggalLahir;
+            tglLahirController.text = formatDate(volunteer!.tanggalLahir); // Format date to dd-MM-yyyy
             statusController.text =
                 volunteer!.statusAktif == 1 ? 'Aktif' : 'Non Aktif'; // Set statusController value based on volunteer status
           }
@@ -92,6 +92,11 @@ class _DetailVolunteerPageState extends State<DetailVolunteerPage> {
         isLoading = false;
       });
     }
+  }
+
+  String formatDate(String date) {
+    DateTime parsedDate = DateTime.parse(date);
+    return DateFormat('dd-MM-yyyy').format(parsedDate);
   }
 
   Future<void> fetchSaldo(int id) async {

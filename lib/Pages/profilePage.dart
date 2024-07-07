@@ -19,6 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   String _name= '';
   String _email='';
+  bool isLoading = false;
 
   final _dio = Dio();
   final _storage = GetStorage();
@@ -33,8 +34,11 @@ class _ProfilePageState extends State<ProfilePage> {
   @override 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
+      body: isLoading
+      ? Center(child: CircularProgressIndicator())
+      : _name.isEmpty && _email.isEmpty
+        ? Center(child: Text('User tidak ditemukan'))
+        : Padding(
           padding: EdgeInsets.all(30.0),
           child: Center(
             child:
@@ -116,7 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 //tombol logout
                 SizedBox(
-                  height: 100,
+                  height: 80,
                 ),
                 Container(
                   width: 350,
@@ -146,7 +150,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ),
-      ),
 
       //tombol Navbar
       bottomNavigationBar: BottomNavigationBar(
@@ -196,6 +199,9 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
   void goDetail(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       final _response = await _dio.get(
         '${_apiUrl}/user',
@@ -214,29 +220,73 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() {
           _name = name;
           _email = email;
+          isLoading = false;
         }
       );
       } else {
         // Tanggapan tidak berhasil, tampilkan pesan kesalahan atau tindakan yang sesuai
         print('Error: API request failed: ${_response.statusCode}');
-      }
+      setState(() {
+        isLoading = false;
+      });}
     } on DioException catch (e) {
     print('${e.response} - ${e.response?.statusCode}');
-    }
+    setState(() {
+      isLoading = false;
+    });}
   }
 
   void goLogout(BuildContext context) async {
-    try{
-      final _response = await _dio.get(
-        '${_apiUrl}/logout',
-        options: Options(
-          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
-        ),
-      );
-      print(_response.data);
-      Navigator.pushNamed(context, '/');
-    } on DioException catch (e) {
-      print('${e.response} - ${e.response?.statusCode}');
-    }
+    if (context == null) return;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState){
+            return AlertDialog(
+              title: Text('Confirmation'),
+              content: Text("Are you sure you want to logout?"),
+              actions: [
+                TextButton(onPressed: () {
+                  Navigator.pop(context);
+                }, 
+                child: Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    try {
+                      final _response = await _dio.get(
+                        '${_apiUrl}/logout',
+                        options: Options(
+                          headers: {
+                            'Authorization': 'Bearer ${_storage.read('token')}'
+                          },
+                        ),
+                      );
+                      print(_response.data);
+                      Navigator.pushNamed(context, '/');
+                    } on DioException catch (e) {
+                      print('${e.response} - ${e.response?.statusCode}');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Yout token is expired. Login Please.',
+                            textAlign: TextAlign.center,
+                          ),
+                          duration: Duration(seconds: 3),
+                          behavior: SnackBarBehavior.floating,
+                        )
+                      );
+                      Navigator.pushReplacementNamed(context, '/login');
+                    }
+                  },
+                  child: Text("Yes"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 }
